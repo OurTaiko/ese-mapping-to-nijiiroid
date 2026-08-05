@@ -33,7 +33,11 @@ def fetch_song_numbers(url: str = SONG_API_URL) -> set[str]:
             raise ValueError(f"API 第 {index} 项缺少 songNo")
 
         song_no = song["songNo"]
-        if song_no is None or isinstance(song_no, (dict, list, bool)):
+        try:
+            song_no = int(song_no)
+        except (ValueError, TypeError):
+            continue
+        if song_no is None or not isinstance(song_no, int):
             raise ValueError(f"API 第 {index} 项的 songNo 无效: {song_no!r}")
         song_numbers.add(str(song_no))
 
